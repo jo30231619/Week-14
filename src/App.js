@@ -1,25 +1,76 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import StarRating from './components/starrating';
+import Table from './components/table';
+import Form from './components/form';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+export default class App extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      username: '',
+      date: '',
+      textarea: '',
+      items: []
+    }
+  };
+
+  handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    let items = [...this.state.items];
+
+    items.push({
+      username: this.state.username,
+      date: this.state.date,
+      textarea: this.state.textarea
+    });
+
+    this.setState({
+      items, 
+      username: '',
+      date: '',
+      textarea: ''
+    });
+  };
+
+  onChange = (e) => {
+    let input = e.target;
+    let name = e.target.name;
+    let value = input.value;
+
+    this.setState({
+      [name]: value
+    })
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <RatingSystem starCount={5} /><br />
+        <Form handleFormSubmit={this.handleFormSubmit }
+          onChange={ this.onChange }
+          newUsername={ this.state.username }
+          newDate={ this.state.date }
+          newTextArea={ this.state.textarea } />
+        <Table items={ this.state.items }/>
+      </div>
+    );
+  }
 }
 
-export default App;
+const RatingSystem = (props) => {
+  return (
+      <div>
+          <h1>RATE THIS</h1><br />
+          <div className="rating">
+              <StarRating starCount={props.starCount} />
+          </div>
+      </div>
+  );
+};
+
+
+
